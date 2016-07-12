@@ -30,6 +30,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>false</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -43,6 +44,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>false</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -170,45 +172,77 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ActionComponent.h" />
     <ClInclude Include="Actor.h" />
     <ClInclude Include="AnimationComponent.h" />
+    <ClInclude Include="AnimationManager.h" />
     <ClInclude Include="BackgroundActor.h" />
     <ClInclude Include="Boss.h" />
+    <ClInclude Include="Bullet.h" />
+    <ClInclude Include="Chromosome.h" />
     <ClInclude Include="CollisionComponent.h" />
+    <ClInclude Include="CollisionManager.h" />
+    <ClInclude Include="ComboManager.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="delegate.h" />
+    <ClInclude Include="GeneticAlgorithm.h" />
+    <ClInclude Include="Genome.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="NeuralNet.h" />
+    <ClInclude Include="NeuralTrainer.h" />
     <ClInclude Include="Neuron.h" />
     <ClInclude Include="NeuronLayer.h" />
     <ClInclude Include="NNVisualizer.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PhysicsManager.h" />
+    <ClInclude Include="PinkGlowEffect.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Primitive.h" />
+    <ClInclude Include="ProjectileComponent.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="RigidBody.h" />
+    <ClInclude Include="SpriteEffects.h" />
     <ClInclude Include="StateMachine.h" />
+    <ClInclude Include="StaticActor.h" />
+    <ClInclude Include="ThreadManager.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="VectorMath.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ActionComponent.cpp" />
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="AnimationComponent.cpp" />
+    <ClCompile Include="AnimationManager.cpp" />
     <ClCompile Include="BackgroundActor.cpp" />
     <ClCompile Include="Boss.cpp" />
+    <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="Chromosome.cpp" />
     <ClCompile Include="CollisionComponent.cpp" />
+    <ClCompile Include="CollisionManager.cpp" />
+    <ClCompile Include="ComboManager.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="GameLoop.cpp" />
+    <ClCompile Include="GeneticAlgorithm.cpp" />
+    <ClCompile Include="Genome.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="NeuralNet.cpp" />
+    <ClCompile Include="NeuralTrainer.cpp" />
     <ClCompile Include="Neuron.cpp" />
     <ClCompile Include="NeuronLayer.cpp" />
     <ClCompile Include="NNVisualizer.cpp" />
     <ClCompile Include="PhysicsManager.cpp" />
+    <ClCompile Include="PinkGlowEffect.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Primitive.cpp" />
+    <ClCompile Include="ProjectileComponent.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="RigidBody.cpp" />
+    <ClCompile Include="SpriteEffects.cpp" />
     <ClCompile Include="StateMachine.cpp" />
+    <ClCompile Include="StaticActor.cpp" />
+    <ClCompile Include="ThreadManager.cpp" />
+    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="VectorMath.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>

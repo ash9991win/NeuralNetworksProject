@@ -43,14 +43,14 @@ void NNVisualizer::AssignNetwork(NeuralNet & net)
 	//Total width of the net:
 	mWidthOfNet = mWidthOfInputLayer + mWidthOfHiddenLayer + mWidthOfOutputLayer;
 	mHeightOfNet = std::max({ mHeightOfInputLayer, mHeightOfHiddenLayer, mHeightOfOutputLayer }, [](const float& f1, const float& f2) {return f1 < f2; });
-
+    
 }
 //The starting position of the network is : (WWindow - heightOfnet ) / 2
 void NNVisualizer::AssignWindow(sf::RenderWindow & window)
 {
 	mWindow = &window;
 	mStartingPosition.x = mInputLineLength;
-	mStartingPosition.y = (mWindow->getSize().x - mHeightOfNet) / 2;
+	mStartingPosition.y = (mWindow->getSize().x - mHeightOfNet/1.5) /*/ 2*/;
 	if (mStartingPosition.y < 0)
 		mStartingPosition.y = 0;
 	mInputLayerPosition = mStartingPosition;
@@ -91,13 +91,41 @@ void NNVisualizer::Render()
 		startingInputPosition.y += mNeuronRadius - (numberOfInputs * gapBetweenInputs) / 2;
 		for (int i = 0; i < numberOfInputs; i++)
 		{
-			Primitive::DrawLine(startingInputPosition.x, startingInputPosition.y, startingInputPosition.x + mInputLineLength + mGapBetweenLayers, startingInputPosition.y, sf::Color::Green);
-			std::ostringstream str;
-			sf::Text weightText;
-			weightText.setColor(sf::Color::Black);
+			//Input text
 			sf::Vector2f position = startingInputPosition;
 			position.x += mInputLineLength;
-			position.y -= gapBetweenInputs;
+			//position.y -= gapBetweenInputs;
+			sf::Text inputText;
+			inputText.setScale(0.5f, 0.5f);
+			position.x -= 20;
+			inputText.setPosition(position);
+			inputText.setFont(*(ResourceManager::GetGameFont()));
+			inputText.setColor(sf::Color::Blue);
+			std::ostringstream str;
+			if (i <n->mWeights.size())
+			{
+				//Display the weight
+				if (i < n->mInputs.size())
+				{
+					auto weight = n->mInputs[i];
+					str << weight;
+					//str << "";
+				}
+				else
+				{
+					str << "0";
+				}
+				inputText.setString(str.str());
+			}
+			else
+			{
+				inputText.setString("0");
+			}
+			position.x += 20;
+			std::ostringstream str1;
+			Primitive::DrawLine(startingInputPosition.x, startingInputPosition.y, startingInputPosition.x + mInputLineLength + mGapBetweenLayers, startingInputPosition.y, sf::Color::Green);
+			sf::Text weightText;
+			weightText.setColor(sf::Color::Black);
 			weightText.setScale(0.5f, 0.5f);
 			weightText.setPosition(position);
 			weightText.setFont(*(ResourceManager::GetGameFont()));
@@ -106,15 +134,16 @@ void NNVisualizer::Render()
 				//Display the weight
 
 				auto weight = n->mWeights[i];
-				str << weight;
-				weightText.setString(str.str());
+				str1 << weight;
+				weightText.setString(str1.str());
 
 			}
 			else
 			{
 				weightText.setString("0");
 			}
-			mWindow->draw(weightText);
+			mWindow->draw(inputText);
+			//mWindow->draw(weightText);
 			startingInputPosition.y += gapBetweenInputs;
 		}
 		//Draw output connecting to each neuron in the hidden layer
@@ -143,22 +172,75 @@ void NNVisualizer::Render()
 			float outputlineY1 = hiddenInputPosition.y + mNeuronRadius;
 			float outputlineX2 = mHiddenNeuronPosition.x + mNeuronRadius;
 			float outputlineY2 = mHiddenNeuronPosition.y + mNeuronRadius;
-			Primitive::DrawLine(outputlineX1,outputlineY1 ,outputlineX2 ,outputlineY2, sf::Color::Black);
-			sf::Text inputLayerOutputText;
-			inputLayerOutputText.setFont(*ResourceManager::GetGameFont());
-			std::ostringstream str;
+
+
 			sf::Vector2f textPosition;
 			textPosition.x = (outputlineX1 + outputlineX2) / 2;
 			textPosition.y = (outputlineY1 + outputlineY2) / 2;
+			textPosition.x -= 40;
 			textPosition.y -= gapBetweenInputs;
+			sf::Text inputText;
+			inputText.setScale(0.5f, 0.5f);
+			textPosition.x -= 20;
+			inputText.setPosition(textPosition);
+			inputText.setFont(*(ResourceManager::GetGameFont()));
+			inputText.setColor(sf::Color::Black);
+			std::ostringstream str0;
+			if (i <n->mWeights.size())
+			{
+				//Display the weight
+				if (i < n->mInputs.size())
+				{
+					auto weight = n->mInputs[i];
+					str0 << weight;
+					str0 << "";
+				}
+				else
+				{
+					str0 << "0";
+				}
+				inputText.setString(str0.str());
+			}
+			else
+			{
+				inputText.setString("0");
+			}
+			textPosition.x += 20;
+			std::ostringstream str1;
+			sf::Text weightText;
+			weightText.setColor(sf::Color::Blue);
+			weightText.setScale(0.5f, 0.5f);
+			weightText.setPosition(textPosition);
+			weightText.setFont(*(ResourceManager::GetGameFont()));
+			if (i <n->mWeights.size())
+			{
+				//Display the weight
+
+				auto weight = n->mWeights[i];
+				str1 << weight;
+				weightText.setString(str1.str());
+
+			}
+			else
+			{
+				weightText.setString("0");
+			}
+			//mWindow->draw(inputText);
+			mWindow->draw(weightText);
+			textPosition.x += 40;
+
+			Primitive::DrawLine(outputlineX1,outputlineY1 ,outputlineX2 ,outputlineY2, sf::Color::Black);
+			std::ostringstream str;
+			sf::Text inputLayerOutputText;
+			inputLayerOutputText.setFont(*ResourceManager::GetGameFont());
 			str << mNetToDisplay->mInputLayer->mNeurons[i]->mOutput;
 			inputLayerOutputText.setPosition(textPosition);
 			inputLayerOutputText.setColor(sf::Color::Black);
 			inputLayerOutputText.setString(str.str());
 			inputLayerOutputText.setScale(0.5f, 0.5f);
-			mWindow->draw(inputLayerOutputText);
+			//mWindow->draw(inputLayerOutputText);
 			hiddenInputPosition.y += mGapBetweenNeurons;
-		}
+		} 
 
 		mHiddenNeuronPosition.y += mGapBetweenNeurons;
 		mWindow->draw(neuronShape);
@@ -183,19 +265,72 @@ void NNVisualizer::Render()
 			float outputlineX2 = mOutputNeuronPosition.x + mNeuronRadius;
 			float outputlineY2 = mOutputNeuronPosition.y + mNeuronRadius;
 			Primitive::DrawLine(outputlineX1, outputlineY1, outputlineX2, outputlineY2, sf::Color::Blue);
-			sf::Text inputLayerOutputText;
-			inputLayerOutputText.setFont(*ResourceManager::GetGameFont());
-			std::ostringstream str;
 			sf::Vector2f textPosition;
 			textPosition.x = (outputlineX1 + outputlineX2) / 2;
 			textPosition.y = (outputlineY1 + outputlineY2) / 2;
+			textPosition.x -= 40;
 			textPosition.y -= gapBetweenInputs;
+			sf::Text inputText;
+			inputText.setScale(0.5f, 0.5f);
+			textPosition.x -= 20;
+			inputText.setPosition(textPosition);
+			inputText.setFont(*(ResourceManager::GetGameFont()));
+			inputText.setColor(sf::Color::Blue);
+			std::ostringstream str0;
+			if (i <n->mWeights.size())
+			{
+				//Display the weight
+				if (i < n->mInputs.size())
+				{
+					auto weight = n->mInputs[i];
+					str0 << weight;
+					//str0 << "";
+				}
+				else
+				{
+					str0 << "0";
+				}
+				inputText.setString(str0.str());
+			}
+			else
+			{
+				inputText.setString("0");
+			}
+			textPosition.x += 20;
+			std::ostringstream str1;
+			sf::Text weightText;
+			weightText.setColor(sf::Color::Black);
+			weightText.setScale(0.5f, 0.5f);
+			weightText.setPosition(textPosition);
+			weightText.setFont(*(ResourceManager::GetGameFont()));
+			if (i <n->mWeights.size())
+			{
+				//Display the weight
+
+				auto weight = n->mWeights[i];
+				str1 << weight;
+				weightText.setString(str1.str());
+
+			}
+			else
+			{
+				weightText.setString("0");
+			}
+			mWindow->draw(inputText);
+			//mWindow->draw(weightText);
+			
+
+			sf::Text inputLayerOutputText;
+			inputLayerOutputText.setFont(*ResourceManager::GetGameFont());
+			std::ostringstream str;
+			
 			str << mNetToDisplay->mHiddenLayer->mNeurons[i]->mOutput;
+			textPosition.x += 40;
 			inputLayerOutputText.setPosition(textPosition);
 			inputLayerOutputText.setColor(sf::Color::Black);
 			inputLayerOutputText.setString(str.str());
 			inputLayerOutputText.setScale(0.5f, 0.5f);
-			mWindow->draw(inputLayerOutputText);
+		//	mWindow->draw(inputLayerOutputText);
 			outputLayerInput.y += mGapBetweenNeurons;
 		}
 		sf::Vector2f outputOutputLayerPosition = mOutputNeuronPosition;

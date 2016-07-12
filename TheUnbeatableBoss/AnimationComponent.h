@@ -13,7 +13,8 @@ private:
 	float mFrameWidth;
 	float mFrameHeight;
 public:
-	AnimationComponent();
+	bool autoPlay;
+	AnimationComponent(bool play = true);
 	void SetFrames(std::vector<std::string> frameNames);
 	void SetTimeBetweenFrames(float value);
 	void SetFrameDimensions(float width = 100, float height = 100);
@@ -21,6 +22,9 @@ public:
 
 	// Inherited via Component
 	virtual void Update(float deltaTime) override;
+	void PlayNext();
+	void PlayPrev();
+	void Stop();
 	virtual void BeginPlay() override;
 };
 

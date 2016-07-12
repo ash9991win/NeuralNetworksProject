@@ -7,12 +7,18 @@
 class Neuron
 {
 	friend class NNVisualizer;
+	friend class NeuralTrainer;
+	friend class NeuralNet;
+	friend class NeuronLayer;
 private:
 	int mNumberOfInputs;
+	std::vector<double> mInputs;
 	std::vector<double> mWeights;
+	std::vector<double> mPreviousWeights;
 	std::function<double(double)> mActivationFunction;
 	std::string mName;
 	double mOutput;
+	double mError;
 public:
 	Neuron(int numInputs,const std::string& name,std::function<double(double)> activation);
 	~Neuron() = default;
@@ -28,6 +34,8 @@ public:
 	double GetWeight(int index);
 	//Sets teh entire weights
 	void SetWeights(std::vector<double> weights);
+	void AssignInput(int index, double value);
+	void AssignInput(std::vector<double> value);
 	void ChangeInputSize(int newSize);
 	//returns the name of the neuron
 	const std::string& Name() const;

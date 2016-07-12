@@ -32,6 +32,7 @@ public:
 	\return Returns true if the key was pressed
 	*/
 	static bool IsKeyPressed(sf::Keyboard::Key);
+	static bool IsKeyReleased(sf::Keyboard::Key);
 	/*!
 	\var MousePressedEvents
 	\brief The delegate for mouse press

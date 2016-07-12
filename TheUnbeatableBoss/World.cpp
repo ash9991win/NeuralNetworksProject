@@ -2,9 +2,12 @@
 #include "World.h"
 #include "Actor.h"
 #include"Component.h"
+#include"Timer.h"
 std::vector<Actor*> World::mActorTable;
 World* World::mWorldInstance;
 sf::RenderWindow* World::mWindow;
+int World::numberOfCycles;
+GAME_STATE World::CURRENT_GAME_STATE;
 void World::CreateWorld(sf::RenderWindow* window)
 {
 	mWorldInstance = new World();
@@ -20,20 +23,35 @@ void World::RegisterActor(Actor& actor)
 
 void World::UnRegister(Actor & actor)
 {
-	mActorTable.erase(std::find(mActorTable.begin(), mActorTable.end(), &actor));
+	//mActorTable.erase(std::find(mActorTable.begin(), mActorTable.end(), &actor));
+	auto actorToRemove = *(std::find(mActorTable.begin(), mActorTable.end(), &actor));
+	if (actorToRemove)
+	{
+		actorToRemove->isActorAlive = false;
+	}
 }
 
 void World::UpdateWorld(float deltaTime)
 {
 	for (auto actor :mActorTable)
 	{
-		actor->Update(deltaTime);
-		for (auto& component : actor->mComponents)
+		if (actor->shouldUpdate)
 		{
-			component->Update(deltaTime);
+			actor->Update(deltaTime);
+			for (auto component : actor->mComponents)
+			{
+				component->Update(deltaTime);
+			}
+			actor->mSprite.setPosition(actor->mPosition);
+			mWindow->draw((actor->mSprite));
 		}
-		actor->mSprite.setPosition(actor->mPosition);
-		mWindow->draw((actor->mSprite));
+	}
+	numberOfCycles++;
+	if (numberOfCycles > 100)
+	{
+		auto& index = std::partition(mActorTable.begin(), mActorTable.end(), [](Actor* actor) {return actor->IsActorAlive(); });
+		mActorTable.erase(index, mActorTable.end());
+		numberOfCycles = 0;
 	}
 }
 
@@ -42,7 +60,12 @@ void World::BeginWorld()
 	for (auto* actor : mActorTable)
 	{
 		actor->BeginPlay();
+		for (auto c : actor->mComponents)
+		{
+			c->BeginPlay();
+		}
 	}
+	numberOfCycles = 0;
 }
 
 std::vector<Actor*> World::FindActorsOfType(std::uint64_t type)
@@ -65,6 +88,13 @@ const std::vector<Actor*> World::GetAllActorsInTheWorld()
 
 World::World()
 {
+}
+
+Timer * World::CreateTimer(float maxTime)
+{
+	Timer* timer = new Timer(maxTime);
+	Timer::mListOfTimers.push_back(timer);
+	return timer;
 }
 
 

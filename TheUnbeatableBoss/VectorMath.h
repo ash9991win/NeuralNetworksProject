@@ -13,7 +13,7 @@ public:
 template<typename T>
 inline double VectorMath::Distance(sf::Vector2<T>& v1, sf::Vector2<T> v2)
 {
-	return sqrt((v2.y * v1.y) + (v2.x * v1.x));
+	return sqrt((v2.x - v1.x)*(v2.x - v1.x) + (v2.y - v1.y)*(v2.y - v1.y));
 }
 
 template<typename T>

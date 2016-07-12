@@ -5,10 +5,10 @@ class CollisionComponent :
 	public Component
 {
 protected:
+public:
 	float mWidth;
 	float mHeight;
 	sf::Vector2f mPosition;
-public:
 	CollisionComponent(float width, float height);
 	~CollisionComponent();
 	typedef delegate<void, Actor*> OnCollisionDelegate;

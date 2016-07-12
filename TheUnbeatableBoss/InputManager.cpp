@@ -15,6 +15,10 @@ map<sf::Keyboard::Key, InputManager::KeyPressed> InputManager::KeyPressedTable;
 		 mKeyPressedStatus[key] = false;
 	 return result;
  }
+ bool InputManager::IsKeyReleased(sf::Keyboard::Key)
+ {
+	 return false;
+ }
  void InputManager::HandleKeyPress(sf::Keyboard::Key key,float deltaTime)
 {
 	if (KeyPressedTable.find(key) != KeyPressedTable.end())

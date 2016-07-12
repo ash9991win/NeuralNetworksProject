@@ -29,13 +29,24 @@ Neuron * NeuronLayer::GetNeuronOfName(const std::string & name)
 	return result;
 }
 
-std::vector<double> NeuronLayer::Update(vector<double> input)
+std::vector<double> NeuronLayer::Update()
 {
 	
 	vector<double> outputs;
 	
 	for (auto n : mNeurons) {
-		n->SetWeights(input);
+		outputs.push_back(n->Update());
+	}
+	return outputs;
+}
+
+std::vector<double> NeuronLayer::Update(std::vector<double> input)
+{
+	vector<double> outputs;
+
+	for (auto n : mNeurons)
+	{
+		n->AssignInput(input);
 		outputs.push_back(n->Update());
 	}
 	return outputs;

@@ -14,6 +14,7 @@ private:
 	static std::map<std::string, sf::Sprite> mSpriteTable;
 	static std::map<std::string, sf::Texture> mTextureTable;
 	static std::map<std::string, sf::Sprite>::iterator mSpriteIterator;
+	static std::map<int, sf::Sprite> mAnimationTable;
 	static sf::Font mFont;
 public:
 	ResourceManager();
@@ -28,6 +29,7 @@ public:
 	\param The name of the sprite to be loaded
 	*/
 	static sf::Sprite* LoadSprite(std::string name);
+	static sf::Sprite* LoadAnimationFrame(int id);
 	/*!
 	\fn GetGameFont()
 	\brief Returns the font used in the game

@@ -6,40 +6,84 @@
 #include"Player.h"
 #include"VectorMath.h"
 #include"InputManager.h"
+#include"AnimationComponent.h"
+#include"CollisionComponent.h"
+#include"Bullet.h"
+#include"PinkGlowEffect.h"
+#include"NeuralTrainer.h"
+#include"Genome.h"
+#include"Chromosome.h"
 #include<iostream>
+#include<future>
+#define STORE_PATTERNS 1
+using namespace std;
 RTTI_DEFINITION(Boss)
 Boss::Boss()
 {
-	mBrain = new NeuralNet();
-	Neuron* neuron = new Neuron(2, "PlayerInputs", [](double i) {if (i > 0.0) { return i; } else { return 0.0; } });
-	Neuron* neuronI = new Neuron(2, "PlayerInputs", [](double i) {if (i > 0.0) { return i; } else { return 0.0; } });
+	mComboPredictor = new NeuralNet();
+	mComboTrainer = new NeuralTrainer();
+	Neuron* mHiddenToCombo = new Neuron(3, "Player Hidden", ActivationFunctions::Sigmoid);
+	Neuron* mHiddenToCombo1 = new Neuron(3, "Player Hidden", ActivationFunctions::Sigmoid);
+	Neuron* mHiddenToCombo2 = new Neuron(3, "Player Hidden", ActivationFunctions::Sigmoid);
 
-	NeuronLayer* inputLayer = new NeuronLayer();
-	inputLayer->AddNeuron(*neuron);
-	inputLayer->AddNeuron(*neuron);
-	inputLayer->AddNeuron(*neuron);
-	inputLayer->AddNeuron(*neuron);
+	Neuron* mOutputCombo = new Neuron(3, "Player Output", ActivationFunctions::Sigmoid);
 
-	inputLayer->AddNeuron(*neuron);
-	Neuron *neuron1 = new Neuron(5,"PlayerDistance", [](double i) {if (i > 0.0) { return i; }else { return 0.0; } });
-	Neuron *neuronH = new Neuron(5, "PlayerDistance", [](double i) {if (i > 0.0) { return i; } else { return 0.0; } });
-	NeuronLayer* hiddenLayer = new NeuronLayer();
-	hiddenLayer->AddNeuron(*neuron1);
-	hiddenLayer->AddNeuron(*neuronH);
-	hiddenLayer->AddNeuron(*neuronH);
-	hiddenLayer->AddNeuron(*neuronH);
+	NeuronLayer* InputLayer = new NeuronLayer();
+	for (int i = 0; i < COMBO_LENGTH; i++)
+	{
+		Neuron* inputNeuron = new Neuron(1, "Player Inputs", ActivationFunctions::Sigmoid);
+		InputLayer->AddNeuron(*inputNeuron);
+	}
 
-	Neuron* neuron2 = new Neuron(6,"WorldState", [](double i) {if (i > 0.0) { return i; }else { return 0.0; } });
-	NeuronLayer* outputLayer = new NeuronLayer();
-	outputLayer->AddNeuron(*neuron2);
-	outputLayer->AddNeuron(*neuron2);
-	outputLayer->AddNeuron(*neuron2);
-	outputLayer->AddNeuron(*neuron2);
-	outputLayer->AddNeuron(*neuron2);
+	NeuronLayer* Hiddenlayer = new NeuronLayer();
+	Hiddenlayer->AddNeuron(*mHiddenToCombo);
+	Hiddenlayer->AddNeuron(*mHiddenToCombo1);
+	Hiddenlayer->AddNeuron(*mHiddenToCombo2);
 
-	mBrain->AssignInputLayer(*inputLayer);
-	mBrain->AssignHiddenlayer(*hiddenLayer);
-	mBrain->AssignOutputLayer(*outputLayer);
+
+	NeuronLayer* OutputLayer = new NeuronLayer();
+	OutputLayer->AddNeuron(*mOutputCombo);
+
+	mComboPredictor->AssignInputLayer(*InputLayer);
+	mComboPredictor->AssignHiddenlayer(*Hiddenlayer);
+	mComboPredictor->AssignOutputLayer(*OutputLayer);
+	mComboPredictor->Initialize();
+	mComboTrainer->AssignNetwork(*mComboPredictor);
+
+	Genome<Dir>::AddPossibleValue(Dir::DOWN);
+	Genome<Dir>::AddPossibleValue(Dir::LEFT);
+	Genome<Dir>::AddPossibleValue(Dir::UP);
+	Genome<Dir>::AddPossibleValue(Dir::RIGHT);
+
+	Genome<Dir>::UpdateFunction = [](Dir d) {
+	};
+	Chromosome<Dir>::FitnessFunction = [this](Chromosome<Dir>& ch) {
+		sf::Vector2f origin;
+		origin.x = origin.y = 0;
+		sf::Vector2f newPosition = mPosition;
+		for (auto g : ch.mChromosome)
+		{
+		
+			switch (g->CurrentValue())
+			{
+			case Dir::DOWN:
+				newPosition.y += 10.0;
+				break;
+			case Dir::UP:
+				newPosition.y -= 10.0;
+				break; 
+			case Dir::LEFT:
+				newPosition.x -= 10.0;
+				break; 
+			case Dir::RIGHT:
+				newPosition.x += 10.0;
+			    break;
+
+			}
+		}
+		return VectorMath::Distance(origin, newPosition);
+	};
+	
 }
 
 
@@ -47,10 +91,17 @@ Boss::~Boss()
 {
 }
 
+void Boss::CollidedWithActor(Actor * actor)
+{
+	if (actor->Is(Bullet::TypeIdClass()) && actor->IsActorAlive())
+	{
+		auto pinkeffect = AddComponent<PinkGlowEffect>(0.4);
+	}
+}
+
 void Boss::MoveLeft(float d)
 {
 	mPosition.x -= speed * d;
-
 }
 
 void Boss::MoveRight(float d)
@@ -65,37 +116,107 @@ void Boss::Jump(float d)
 
 void Boss::Update(float deltaTime)
 {
-	static vector<double> inputsToTheBrain;
-	static int numberOfKeyPresses = 0;
-	double distance = VectorMath::Distance(mPosition, mPlayer->mPosition);
-	if (InputManager::IsKeyPressed(sf::Keyboard::A))
+#if TRAIN_WITH_DATA
+	if (InputManager::IsKeyPressed(sf::Keyboard::X))
 	{
-		inputsToTheBrain.push_back(2);
-		std::cout << "A pressed" << endl;
-		numberOfKeyPresses++;
+		TrainBossWithSequence();
 	}
-	if (InputManager::IsKeyPressed(sf::Keyboard::D))
-	{
-		inputsToTheBrain.push_back(3);
-		std::cout << "D pressed" << endl;
-		numberOfKeyPresses++;
-	}
+#endif
 	
-	if (inputsToTheBrain.size() && numberOfKeyPresses >= 4)
-	{
-		auto output = mBrain->Update(inputsToTheBrain);
-		cout << output[0] << endl;
-		inputsToTheBrain.clear();
-		numberOfKeyPresses = 0;
+}
+
+sf::Keyboard::Key Boss::PredictNextKey(vector<double> inputsToNetwork)
+{
+	if (inputsToNetwork.size() < 3)
+		return sf::Keyboard::BackSpace;
+	/*static future<void> neuralThread = std::async(
+		[this,inputsToNetwork]() {
+			mComboPredictor->AssignInput(inputsToNetwork);
+				mComboTrainer->SetExpectedOutput(2.3f);
+				auto output = mComboPredictor->Update();
+				mComboTrainer->Update();
 	}
+	);*/
+	for (int i = 0; i < inputsToNetwork.size(); i++)
+	{
+		mComboPredictor->AssignInput(i, inputsToNetwork[i]);
+	}
+//	mComboPredictor->AssignInput(inputsToNetwork
+	vector<double> output;
+#if STORE_PATTERNS
+	if (!mComboPredictor->CheckIfInputWasCaptured(output))
+	{
+		output = mComboPredictor->Update();
+	}
+#else
+	output = mComboPredictor->Update();
+#endif
+	/*else
+	{
+		cout << "Pattern was already captured" << endl;
+	}*/
+	//Now we know the output, which can be +- the error rate
+	auto& dataSet = mPlayer->mInverseWeights;
+	for (auto& i : dataSet)
+	{
+		if(abs(output[0] - i.first) <= (10 * ERROR_RATE))
+			return i.second;
+	}
+	return sf::Keyboard::Key::BackSpace;
+}
+
+void Boss::CorrectPrediction(sf::Keyboard::Key keyToCorrectTo)
+{
+	vector<double> inputsToNetwork = mPlayer->mInputCombos;
+	//mComboPredictor->AssignInput(inputsToNetwork);
+	for (int i = 0; i < inputsToNetwork.size(); i++)
+	{
+		mComboPredictor->AssignInput(i, inputsToNetwork[i]);
+	}
+	inputsToNetwork.clear();
+	mComboTrainer->SetExpectedOutput(mPlayer->mInputWeights[keyToCorrectTo]);
+	mComboTrainer->UpdateAsync();
 }
 
 void Boss::BeginPlay()
 {
-	mSprite = *(ResourceManager::LoadSprite("Boss0"));
 	mPosition = sf::Vector2f(WINDOW_WIDTH - 200, WINDOW_HEIGHT - 200);
 	SetSpriteDimensions(200, 200);
 	speed = 2000;
 	mPlayer = World::FindActorsOfType<Player>()[0];
+	IdleAnimation = AddComponent<AnimationComponent>();
+	IdleAnimation->SetFrames({ "BossIdle_1","BossIdle_2","BossIdle_3","BossIdle_4","BossIdle_5" });
+	IdleAnimation->SetFrameDimensions(mSpriteWidth, mSpriteHeight);
+	IdleAnimation->SetTimeBetweenFrames(0.24f);
+	auto Collider = AddComponent<CollisionComponent>(100,100);
+	Collider->OnCollision.Bind(&Boss::CollidedWithActor, this);
+	InputManager::KeyReleasedTable[sf::Keyboard::A].Bind(&Boss::MoveLeft, this);
 
 }
+
+bool Boss::IsBossThinking() const
+{
+	return mComboTrainer->IsTrainerCalculating();
+}
+#if TRAIN_WITH_DATA
+void Boss::TrainBossWithSequence()
+{
+	vector<vector<double>> inputs;
+	vector<vector<double>> outputs;
+	for (int i = 0; i < 10; i++)
+	{
+		vector<double> inputEach;
+		vector<double> outputEach;
+		for (int j = 0; j < 1; j++)
+		{
+			inputEach.push_back(ActivationFunctions::Sigmoid(rand()));
+			outputEach.push_back(ActivationFunctions::Sigmoid(rand()));
+		}
+		inputs.push_back(inputEach);
+		outputs.push_back(outputEach);
+	}
+	
+	//mComboTrainer->Train(inputs, outputs);
+	mComboTrainer->TrainAsync(inputs, outputs);
+}
+#endif

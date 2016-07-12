@@ -3,9 +3,9 @@
 #include"World.h"
 #include"Actor.h"
 #include "AnimationComponent.h"
-AnimationComponent::AnimationComponent()
+AnimationComponent::AnimationComponent(bool autoP)
+	:autoPlay(autoP)
 {
-
 }
 
 void AnimationComponent::SetFrames(std::vector<std::string> spriteNames)
@@ -40,18 +40,44 @@ AnimationComponent::~AnimationComponent()
 
 void AnimationComponent::Update(float deltaTime)
 {
-	if (mCurrentTime >= mTimeBetweenFrames)
+	if (autoPlay)
 	{
-		mCurrentFrame++;
-		if (mCurrentFrame > mMaxFrame)
+		if (mCurrentTime >= mTimeBetweenFrames)
 		{
-			mCurrentFrame = 0;
+			mCurrentFrame++;
+			if (mCurrentFrame > mMaxFrame)
+			{
+				mCurrentFrame = 0;
+			}
+			mCurrentTime = 0;
 		}
-		mCurrentTime = 0;
-	}
-	mCurrentTime+= deltaTime;
+		mCurrentTime += deltaTime;
 
-	mOwner->GetWindow()->draw((mFrames[mCurrentFrame]));
+	}
+	mOwner->mSprite = mFrames[mCurrentFrame];
+}
+
+void AnimationComponent::PlayNext()
+{
+	mCurrentFrame++;
+	if (mCurrentFrame > mMaxFrame)
+	{
+		mCurrentFrame = 0;
+	}
+}
+
+void AnimationComponent::PlayPrev()
+{
+	mCurrentFrame--;
+	if (mCurrentFrame < mMaxFrame)
+	{
+		mCurrentFrame = 0;
+	}
+}
+
+void AnimationComponent::Stop()
+{
+	mCurrentFrame = 0;
 }
 
 void AnimationComponent::BeginPlay()
