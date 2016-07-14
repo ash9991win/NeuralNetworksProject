@@ -18,10 +18,11 @@
 #include"TileMap.h"
 #include"GeneticPathFinder.h"
 #include"GAVisualizer.h"
+#include"PatternChooser.h"
 sf::RenderWindow window2(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "ANN");
 sf::RenderWindow GAWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Genetic Algorithm");
 //The main game loop that updates the world and renders the NN visualizer
-GAVisualizer<Dir> GAVisual;
+GAVisualizer<shared_ptr<Action>> GAVisual;
 
 
 int main()
@@ -63,29 +64,22 @@ int main()
 
 	TileMap::Initialize();
 	GeneticPathFinder pathFinder(sf::Vector2f(0, 0), sf::Vector2f(75, 0));
-	InputManager::MousePressedEvents.Bind([&pathFinder](sf::Vector2i position) {
+	InputManager::MousePressedEvents.Bind([BossActor](sf::Vector2i position) {
 		sf::Vector2f pos;
 		pos.x = position.x;
 		pos.y = position.y;
 		auto index = TileMap::GetIndexForPosition(pos);
 		cout << "Pressed position" << index.first << " " << index.second << endl;
 		cout << "Tile is  " << TileMap::IsTileFree(pos) << endl;
-		if (!pathFinder.GBrain.Started())
-		{
-			pathFinder.FindPath();
-		}
+		BossActor->mPatternChooser->FindNextBestPattern(BossActor->Patterns);
 	});
 	GAVisual.AssignWindow(GAWindow);
-	GAVisual.AssignGA(pathFinder.GBrain);
-	auto GAThread(std::async([]
-	{
-		while (GAWindow.isOpen())
-		{
-			GAWindow.clear(sf::Color::White);
-			GAVisual.Render();
-			GAWindow.display();
-		}
-	}));
+	GAVisual.AssignGA(BossActor->mPatternChooser->PatternSearch);
+	GAVisual.PopulateLegends();
+	//auto GAThread(std::async([]
+	//{
+	//	
+	//}));
 //	pathFinder.FindPath();
 
 	while (window.isOpen())
@@ -115,6 +109,12 @@ int main()
 		window.display();
 	
 		deltaTime = GameClock.restart();
+		if (GAWindow.isOpen())
+		{
+			GAWindow.clear(sf::Color::White);
+			GAVisual.Render();
+			GAWindow.display();
+		}
 	}
 	
 	//nnThread.get();
