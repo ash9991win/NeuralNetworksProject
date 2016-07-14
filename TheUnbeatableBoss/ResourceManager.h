@@ -34,7 +34,7 @@ public:
 	\fn GetGameFont()
 	\brief Returns the font used in the game
 	*/
-	static sf::Font* GetGameFont();
+	static const sf::Font* GetGameFont();
 	~ResourceManager();
 };
 

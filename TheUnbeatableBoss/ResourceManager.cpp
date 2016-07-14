@@ -104,7 +104,7 @@ sf::Sprite * ResourceManager::LoadAnimationFrame(int id)
 	return &mAnimationTable[id];
 }
 
-sf::Font * ResourceManager::GetGameFont()
+const sf::Font * ResourceManager::GetGameFont()
 {
 	return &mFont;
 }
