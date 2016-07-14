@@ -4,6 +4,8 @@ using namespace std;
 template<typename T>
  int Genome<T>::MAXNUMBEROFVALUES;
 
+
+
 //template<typename T>
 //Genome<T>::vector<T> Types;
 //template<typename T>

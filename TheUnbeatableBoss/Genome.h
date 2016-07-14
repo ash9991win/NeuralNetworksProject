@@ -13,12 +13,17 @@ public:
 	static void AddPossibleValue(const T& value,string text = "")
 	{
 		Types.push_back(value);
-		MAXNUMBEROFVALUES++;
-		DecodingTable[MAXNUMBEROFVALUES] = value;
 		if (text != "")
 		{
 			StringDecoder[MAXNUMBEROFVALUES] = text;
 		}
+		MAXNUMBEROFVALUES++;
+		DecodingTable[MAXNUMBEROFVALUES] = value;
+		
+	}
+	const vector<int>& GetBits() const
+	{
+		return mBits;
 	}
 	Genome() = default;
 	Genome(int numberOfBits)
@@ -29,3 +34,14 @@ public:
 		}
 	}
 };
+#define DECLARE_GENOME(Type)      \
+ template<>                       \
+ int Genome<Type>::MAXNUMBEROFVALUES;   \
+ template<>                            \
+ vector<Type> Genome<Type>::Types;       \
+ template<>                            \
+ map<int, Type> Genome<Type>::DecodingTable;  \
+ template<>                                 \
+ function<double(vector<Type>)> Genome<Type>::FitnessFunction;    \
+ template<>                                                     \
+ map<int, string> Genome<Type>::StringDecoder;                   
