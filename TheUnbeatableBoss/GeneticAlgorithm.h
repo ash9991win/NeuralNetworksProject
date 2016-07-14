@@ -95,7 +95,7 @@
 				}
 			}//next genome
 		}
-		vector<T1> Decode(const vector<int>& bits)
+		vector<T1> Decode(const vector<int>& bits) const
 		{
 			vector<T1> results;
 			for (auto bit : bits)
@@ -121,7 +121,6 @@
 		}
 		void Epoch()
 		{
-			UpdateFitness();
 			int NewBabies = 0;
 			vector<Genome<T1>> vecBabyGenomes;
 			while (NewBabies < mPopulationSize)
@@ -139,6 +138,7 @@
 			}
 
 			mGenomes = vecBabyGenomes;
+			UpdateFitness();
 			++mGeneration;
 		}
 	public:
@@ -162,22 +162,25 @@
 		//accessor methods
 		int Generation() const { return mGeneration; }
 		int	GetFittest() const { return mFittestGenome; }
-		vector<T1> GetGenome(int index) const {
+		const Genome<T1>& GetGenome(int index) const  {
 			return mGenomes[index];
 		}
-		vector<Genome<T1>> GetAllGenomes() const
+		const vector<Genome<T1>>& GetAllGenomes() const
 		{
 			return mGenomes;
+		}
+		 vector<T1> GetFittestSequence() const
+		{
+			const Genome<T1>& result = GetGenome(GetFittest());
+			return Decode(result.GetBits());
 		}
 		bool Started() const { return mBusy; }
 		void Stop() { mBusy = false; }
 		void Run()
 		{
 			mBusy = true;
-			while (mBusy)
-			{
-				Epoch();
-				EpochDelegate.Invoke();
-			}
+			Epoch();
+			EpochDelegate.Invoke();
+			mBusy = false;
 		}
 	};
