@@ -11,8 +11,6 @@
 #include"Bullet.h"
 #include"PinkGlowEffect.h"
 #include"NeuralTrainer.h"
-#include"Genome.h"
-#include"Chromosome.h"
 #include<iostream>
 #include<future>
 #define STORE_PATTERNS 1
@@ -49,40 +47,6 @@ Boss::Boss()
 	mComboPredictor->AssignOutputLayer(*OutputLayer);
 	mComboPredictor->Initialize();
 	mComboTrainer->AssignNetwork(*mComboPredictor);
-
-	Genome<Dir>::AddPossibleValue(Dir::DOWN);
-	Genome<Dir>::AddPossibleValue(Dir::LEFT);
-	Genome<Dir>::AddPossibleValue(Dir::UP);
-	Genome<Dir>::AddPossibleValue(Dir::RIGHT);
-
-	Genome<Dir>::UpdateFunction = [](Dir d) {
-	};
-	Chromosome<Dir>::FitnessFunction = [this](Chromosome<Dir>& ch) {
-		sf::Vector2f origin;
-		origin.x = origin.y = 0;
-		sf::Vector2f newPosition = mPosition;
-		for (auto g : ch.mChromosome)
-		{
-		
-			switch (g->CurrentValue())
-			{
-			case Dir::DOWN:
-				newPosition.y += 10.0;
-				break;
-			case Dir::UP:
-				newPosition.y -= 10.0;
-				break; 
-			case Dir::LEFT:
-				newPosition.x -= 10.0;
-				break; 
-			case Dir::RIGHT:
-				newPosition.x += 10.0;
-			    break;
-
-			}
-		}
-		return VectorMath::Distance(origin, newPosition);
-	};
 	
 }
 

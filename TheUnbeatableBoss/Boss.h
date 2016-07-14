@@ -1,6 +1,5 @@
 #pragma once
 #include "Actor.h"
-#include"GeneticAlgorithm.h"
 class NeuralNet;
 class NeuralTrainer;
 class Player;
@@ -28,7 +27,6 @@ public:
 	virtual void BeginPlay() override;
 	bool IsBossThinking() const;
 	inline NeuralNet* GetBrain() { return mComboPredictor; }
-	GeneticAlgorithm<Dir> pathFinder;
 #if TRAIN_WITH_DATA
 	void TrainBossWithSequence();
 #endif
