@@ -3,6 +3,7 @@
 #include "Actor.h"
 #include"Component.h"
 #include"Timer.h"
+#include"ActionFactory.h"
 std::vector<Actor*> World::mActorTable;
 World* World::mWorldInstance;
 sf::RenderWindow* World::mWindow;
@@ -12,6 +13,7 @@ void World::CreateWorld(sf::RenderWindow* window)
 {
 	mWorldInstance = new World();
 	mWindow = window;
+	ActionFactory::InitializeFactory();
 }
 
 void World::RegisterActor(Actor& actor)
