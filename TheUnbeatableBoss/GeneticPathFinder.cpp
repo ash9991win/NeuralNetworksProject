@@ -1,17 +1,7 @@
 #include"pch.h"
 #include "GeneticPathFinder.h"
 #include"TileMap.h"
-template<>
-int Genome<Dir>::MAXNUMBEROFVALUES;
-template<>
-vector<Dir> Genome<Dir>::Types;
-template<>
-map<int, Dir> Genome<Dir>::DecodingTable;
-template<>
-function<double(vector<Dir>)> Genome<Dir>::FitnessFunction;
-template<>
- map<int, string> Genome<Dir>::StringDecoder;
-
+DECLARE_GENOME(Dir)
 GeneticPathFinder::GeneticPathFinder(sf::Vector2f start,sf::Vector2f end)
 :GBrain(CROSSOVER_RATE,
 	MUTATION_RATE,
@@ -21,9 +11,10 @@ GeneticPathFinder::GeneticPathFinder(sf::Vector2f start,sf::Vector2f end)
 {
 	SourceIndex = TileMap::GetIndexForPosition(start);
 	DestinationIndex = TileMap::GetIndexForPosition(end);
-	Genome<Dir>::AddPossibleValue(Dir::DOWN);
-	Genome<Dir>::AddPossibleValue(Dir::LEFT);
-	Genome<Dir>::AddPossibleValue(Dir::UP);
+	Genome<Dir>::AddPossibleValue(Dir::DOWN,"DOWN");
+	Genome<Dir>::AddPossibleValue(Dir::LEFT,"LEFT");
+	Genome<Dir>::AddPossibleValue(Dir::UP,"UP");
+	Genome<Dir>::AddPossibleValue(Dir::RIGHT,"RIGHT");
 	Genome<Dir>::FitnessFunction = [this](vector<Dir> path)
 	{
 		
