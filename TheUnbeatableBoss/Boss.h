@@ -1,8 +1,10 @@
 #pragma once
 #include "Actor.h"
+#include"BossPattern.h"
 class NeuralNet;
 class NeuralTrainer;
 class Player;
+class PatternChooser;
 class Boss :
 	public Actor
 {
@@ -14,6 +16,8 @@ private:
 	Player* mPlayer;
 	class AnimationComponent* IdleAnimation;
 public:
+	shared_ptr<PatternChooser> mPatternChooser;
+	shared_ptr<BossPattern> Patterns;
 	Boss();
 	~Boss();
 	void CollidedWithActor(Actor* actor);

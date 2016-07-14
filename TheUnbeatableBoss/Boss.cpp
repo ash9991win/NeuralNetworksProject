@@ -11,6 +11,9 @@
 #include"Bullet.h"
 #include"PinkGlowEffect.h"
 #include"NeuralTrainer.h"
+#include"Movement.h"
+#include"ActionFactory.h"
+#include"PatternChooser.h"
 #include<iostream>
 #include<future>
 #define STORE_PATTERNS 1
@@ -155,7 +158,14 @@ void Boss::BeginPlay()
 	auto Collider = AddComponent<CollisionComponent>(100,100);
 	Collider->OnCollision.Bind(&Boss::CollidedWithActor, this);
 	InputManager::KeyReleasedTable[sf::Keyboard::A].Bind(&Boss::MoveLeft, this);
-
+	Patterns = make_shared<BossPattern>(this); 
+		for (int i = 0; i < CHROMO_LENGTH; i++)
+		{
+			Patterns->EnequeAction(ActionFactory::GetARandomAction());
+		}
+	Patterns->BeginPlay(); 
+	mPatternChooser = make_shared<PatternChooser>();
+	mPatternChooser->Initialize();
 }
 
 bool Boss::IsBossThinking() const
