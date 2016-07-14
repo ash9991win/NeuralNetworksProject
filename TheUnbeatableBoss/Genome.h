@@ -1,39 +1,31 @@
 #pragma once
-
 template<typename T>
 class Genome
 {
-private:
-	T Value;
-	static vector<T> list;
 public:
-	static function<void(T)> UpdateFunction;
-	static void AddPossibleValue(T value)
+	double mFitness;
+	vector<int> mBits;
+	static int MAXNUMBEROFVALUES;
+	static vector<T> Types;
+	static map<int, T> DecodingTable;
+	static map<int, string> StringDecoder;
+	static function<double(vector<T>)> FitnessFunction;
+	static void AddPossibleValue(const T& value,string text = "")
 	{
-		//ListOfValues.ListOfValues.push_back(value);
-		list.push_back(value);
-	}
-	T CurrentValue() const
-	{
-		return Value;
-	}
-	void Update()
-	{
-		if (UpdateFunction)
+		Types.push_back(value);
+		MAXNUMBEROFVALUES++;
+		DecodingTable[MAXNUMBEROFVALUES] = value;
+		if (text != "")
 		{
-			UpdateFunction(Value);
+			StringDecoder[MAXNUMBEROFVALUES] = text;
 		}
 	}
-	static Genome GetRandomGenome()
+	Genome() = default;
+	Genome(int numberOfBits)
 	{
-		int i = std::rand() % list.size();
-		return list[i];
+		for (int i = 0; i < numberOfBits; i++)
+		{
+			mBits.push_back(RandInt(0, MAXNUMBEROFVALUES));
+		}
 	}
-    Genome(T v)
-		:Value(v)
-	{
-	}
-
-	~Genome() = default;
 };
-
