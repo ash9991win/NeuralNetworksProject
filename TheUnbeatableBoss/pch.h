@@ -55,8 +55,8 @@ const int COMBO_LENGTH = 4;
 const int LengthOfChromosome = 2;
 
 const double CROSSOVER_RATE = 0.7;
-const double MUTATION_RATE = 0.001;
-const int POP_SIZE = 50;
+const double MUTATION_RATE = 0.5;
+const int POP_SIZE = 20;
 const int CHROMO_LENGTH = 10;
 const int GENE_LENGTH = 2;
 class ActivationFunctions
