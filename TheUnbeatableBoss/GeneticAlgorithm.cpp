@@ -1,3 +1,6 @@
-#include"pch.h"
-#include"Chromosome.h"
+#include "pch.h"
 #include "GeneticAlgorithm.h"
+namespace GA
+{
+	
+}
