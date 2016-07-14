@@ -34,6 +34,9 @@
     <Filter Include="AI\PathFinding">
       <UniqueIdentifier>{5e512bb7-5453-4db1-a58b-f0c2a9e54b8a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BossActions">
+      <UniqueIdentifier>{9383c137-2711-40f7-9362-efbe85bd32b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -145,6 +148,10 @@
     <ClInclude Include="Genome.h">
       <Filter>AI\Genetic Algorithm</Filter>
     </ClInclude>
+    <ClInclude Include="Movement.h" />
+    <ClInclude Include="BossPattern.h" />
+    <ClInclude Include="ActionFactory.h" />
+    <ClInclude Include="PatternChooser.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameLoop.cpp" />
@@ -251,6 +258,10 @@
     <ClCompile Include="Genome.cpp">
       <Filter>AI\Genetic Algorithm</Filter>
     </ClCompile>
+    <ClCompile Include="Movement.cpp" />
+    <ClCompile Include="BossPattern.cpp" />
+    <ClCompile Include="ActionFactory.cpp" />
+    <ClCompile Include="PatternChooser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
