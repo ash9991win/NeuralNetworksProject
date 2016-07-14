@@ -60,6 +60,6 @@ public:
 	\brief handled by the gameloop
 	\param The type of the event 
 	*/
-	static void HandleMouseEvents(sf::Event::EventType type);
+	static void HandleMouseEvents(sf::Event::EventType type, const sf::Window& window);
 };
 

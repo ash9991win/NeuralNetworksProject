@@ -38,15 +38,15 @@ void InputManager::HandleKeyRelease(sf::Keyboard::Key key,float deltaTime)
 	mKeyPressedStatus[key] = false;
 }
 
-void InputManager::HandleMouseEvents(sf::Event::EventType type)
+void InputManager::HandleMouseEvents(sf::Event::EventType type,const sf::Window& window)
 {
 	if (type == sf::Event::EventType::MouseButtonPressed)
 	{
-		MousePressedEvents.Invoke(sf::Mouse::getPosition());
+		MousePressedEvents.Invoke(sf::Mouse::getPosition(window));
 	}
 	else if (type == sf::Event::EventType::MouseButtonReleased)
 	{
-		MouseReleasedEvents.Invoke(sf::Mouse::getPosition());
+		MouseReleasedEvents.Invoke(sf::Mouse::getPosition(window));
 
 	}
 }
