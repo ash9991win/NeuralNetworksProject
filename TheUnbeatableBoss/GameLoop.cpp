@@ -15,10 +15,13 @@
 #include"Timer.h"
 #include"StaticActor.h"
 #include"ThreadManager.h"
-#include"Chromosome.h"
+#include"TileMap.h"
+#include"GeneticPathFinder.h"
+#include"GAVisualizer.h"
 sf::RenderWindow window2(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "ANN");
+sf::RenderWindow GAWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Genetic Algorithm");
 //The main game loop that updates the world and renders the NN visualizer
-
+GAVisualizer<Dir> GAVisual;
 
 
 int main()
@@ -49,14 +52,42 @@ int main()
 	visualizer.AssignWindow(window2);
 	Primitive::SetWindow(&window2);
 	World::CURRENT_GAME_STATE = GAME_STATE::GAME_RUNNING;
-	auto nnThread(std::async([&] {
-		while (window2.isOpen())
+	//auto nnThread(std::async([&] {
+	//	while (window2.isOpen())
+	//	{
+	//		window2.clear(sf::Color::White);
+	//		visualizer.Render();
+	//		window2.display();
+	//	}
+	//}));
+
+	TileMap::Initialize();
+	GeneticPathFinder pathFinder(sf::Vector2f(0, 0), sf::Vector2f(75, 0));
+	InputManager::MousePressedEvents.Bind([&pathFinder](sf::Vector2i position) {
+		sf::Vector2f pos;
+		pos.x = position.x;
+		pos.y = position.y;
+		auto index = TileMap::GetIndexForPosition(pos);
+		cout << "Pressed position" << index.first << " " << index.second << endl;
+		cout << "Tile is  " << TileMap::IsTileFree(pos) << endl;
+		if (!pathFinder.GBrain.Started())
 		{
-			window2.clear(sf::Color::White);
-			visualizer.Render();
-			window2.display();
+			pathFinder.FindPath();
+		}
+	});
+	GAVisual.AssignWindow(GAWindow);
+	GAVisual.AssignGA(pathFinder.GBrain);
+	auto GAThread(std::async([]
+	{
+		while (GAWindow.isOpen())
+		{
+			GAWindow.clear(sf::Color::White);
+			GAVisual.Render();
+			GAWindow.display();
 		}
 	}));
+//	pathFinder.FindPath();
+
 	while (window.isOpen())
 	{
 		
@@ -73,7 +104,7 @@ int main()
 			}
 			if (event.type == sf::Event::EventType::MouseButtonPressed)
 			{
-				InputManager::HandleMouseEvents(event.type);
+				InputManager::HandleMouseEvents(event.type,window);
 			}
 			
 		}
@@ -86,7 +117,7 @@ int main()
 		deltaTime = GameClock.restart();
 	}
 	
-	nnThread.get();
+	//nnThread.get();
 	ThreadManager::FinishThreads();
 	for (auto& timerThread : Timer::mTimerThreads)
 	{

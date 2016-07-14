@@ -39,16 +39,26 @@ T* As()                \
 
 #define RTTI_DEFINITION(Type) std::uint64_t Type::sRunTimeTypeId = reinterpret_cast<std::uint64_t>(&Type::sRunTimeTypeId);
 
-const float WINDOW_WIDTH = 900;
-const float WINDOW_HEIGHT = 900;
+const int WINDOW_WIDTH = 900;
+const int WINDOW_HEIGHT = 900;
+const int TILE_WIDTH = 50;
+const int TILE_HEIGHT = 50;
+const int NO_OF_ROWS = (WINDOW_HEIGHT / TILE_HEIGHT) + 1;
+const int NO_OF_COLS = (WINDOW_WIDTH / TILE_WIDTH) + 1;
+
 const float FLOOR_X = 0;
 const float FLOOR_Y = WINDOW_HEIGHT;
 const float LEARNING_RATE = 0.5f;
 const float ERROR_RATE = 0.0025f;
 const float MOMENTUM = 0.9f;
-const int COMBO_LENGTH = 6;
+const int COMBO_LENGTH = 4;
 const int LengthOfChromosome = 2;
-const int POPULATIONSIZE = 3;
+
+const double CROSSOVER_RATE = 0.7;
+const double MUTATION_RATE = 0.001;
+const int POP_SIZE = 50;
+const int CHROMO_LENGTH = 10;
+const int GENE_LENGTH = 2;
 class ActivationFunctions
 {
 public:
@@ -61,3 +71,11 @@ enum class Dir
 {
 	UP, DOWN, LEFT, RIGHT
 };
+inline int RandInt(int x, int y) { return rand() % (y - x + 1) + x; }
+inline double RandFloat() { return (rand()) / (RAND_MAX + 1.0); }
+inline bool   RandBool()
+{
+	if (RandInt(0, 1)) return true;
+
+	else return false;
+}

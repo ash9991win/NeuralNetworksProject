@@ -31,6 +31,9 @@
     <Filter Include="AI\Genetic Algorithm">
       <UniqueIdentifier>{81d71c3d-3a5d-4088-af14-bf5e407ee9d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AI\PathFinding">
+      <UniqueIdentifier>{5e512bb7-5453-4db1-a58b-f0c2a9e54b8a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -126,13 +129,20 @@
     </ClInclude>
     <ClInclude Include="StaticActor.h" />
     <ClInclude Include="ThreadManager.h" />
-    <ClInclude Include="Genome.h">
-      <Filter>AI\Genetic Algorithm</Filter>
+    <ClInclude Include="Tile.h">
+      <Filter>AI\PathFinding</Filter>
     </ClInclude>
-    <ClInclude Include="Chromosome.h">
+    <ClInclude Include="TileMap.h">
+      <Filter>AI\PathFinding</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneticPathFinder.h" />
+    <ClInclude Include="GAVisualizer.h">
       <Filter>AI\Genetic Algorithm</Filter>
     </ClInclude>
     <ClInclude Include="GeneticAlgorithm.h">
+      <Filter>AI\Genetic Algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="Genome.h">
       <Filter>AI\Genetic Algorithm</Filter>
     </ClInclude>
   </ItemGroup>
@@ -225,13 +235,20 @@
     </ClCompile>
     <ClCompile Include="StaticActor.cpp" />
     <ClCompile Include="ThreadManager.cpp" />
-    <ClCompile Include="Genome.cpp">
-      <Filter>AI\Genetic Algorithm</Filter>
+    <ClCompile Include="Tile.cpp">
+      <Filter>AI\PathFinding</Filter>
     </ClCompile>
-    <ClCompile Include="Chromosome.cpp">
+    <ClCompile Include="TileMap.cpp">
+      <Filter>AI\PathFinding</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneticPathFinder.cpp" />
+    <ClCompile Include="GAVisualizer.cpp">
       <Filter>AI\Genetic Algorithm</Filter>
     </ClCompile>
     <ClCompile Include="GeneticAlgorithm.cpp">
+      <Filter>AI\Genetic Algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="Genome.cpp">
       <Filter>AI\Genetic Algorithm</Filter>
     </ClCompile>
   </ItemGroup>

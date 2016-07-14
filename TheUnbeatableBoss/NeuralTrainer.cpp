@@ -55,15 +55,6 @@ void NeuralTrainer::Update()
 		}
 		auto output = mNetToTrain->Update();
 		cout << "The obtained output is" << output[0] << endl;
-		vector<double> captureAllInputs;
-		for (auto neuron : inputLayer->mNeurons)
-		{
-			for (auto inputs : neuron->mInputs)
-			{
-				captureAllInputs.push_back(inputs);
-			}
-		}
-		mNetToTrain->mCapturedPatterns[captureAllInputs] = output;
 		{
 			lock_guard<mutex> lg(mTrainerMutex);
 			mIsCalculating = false;
