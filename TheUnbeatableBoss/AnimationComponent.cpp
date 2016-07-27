@@ -6,6 +6,7 @@
 AnimationComponent::AnimationComponent(bool autoP)
 	:autoPlay(autoP)
 {
+	Enable = true;
 }
 
 void AnimationComponent::SetFrames(std::vector<std::string> spriteNames)
@@ -84,4 +85,5 @@ void AnimationComponent::BeginPlay()
 {
 	mCurrentFrame = 0;
 	mCurrentTime = 0;
+	Enable = true;
 }

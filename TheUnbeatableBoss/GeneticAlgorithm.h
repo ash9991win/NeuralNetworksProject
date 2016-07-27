@@ -42,7 +42,7 @@
 				
 				if (RandFloat() < mMutationRate)
 				{
-					bits[curBit] = RandInt(0, Genome<T1>::MAXNUMBEROFVALUES );
+					bits[curBit] = RandInt(0, Genome<T1>::MAXNUMBEROFVALUES - 1);
 				}
 			}
 		}

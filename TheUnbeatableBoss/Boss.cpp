@@ -62,8 +62,11 @@ void Boss::CollidedWithActor(Actor * actor)
 {
 	if (actor->Is(Bullet::TypeIdClass()) && actor->IsActorAlive())
 	{
-		auto pinkeffect = AddComponent<PinkGlowEffect>(0.4);
+		static auto pinkeffect = AddComponent<PinkGlowEffect>(0.4);
+		pinkeffect->Activate();
 	}
+	//mSprite.setColor(sf::Color::Red);
+
 }
 
 void Boss::MoveLeft(float d)
@@ -155,8 +158,8 @@ void Boss::BeginPlay()
 	IdleAnimation->SetFrames({ "BossIdle_1","BossIdle_2","BossIdle_3","BossIdle_4","BossIdle_5" });
 	IdleAnimation->SetFrameDimensions(mSpriteWidth, mSpriteHeight);
 	IdleAnimation->SetTimeBetweenFrames(0.24f);
-	auto Collider = AddComponent<CollisionComponent>(100,100);
-	Collider->OnCollision.Bind(&Boss::CollidedWithActor, this);
+	mCollider = new CollisionComponent(100,100);
+	mCollider->OnCollision.Bind(&Boss::CollidedWithActor, this);
 	InputManager::KeyReleasedTable[sf::Keyboard::A].Bind(&Boss::MoveLeft, this);
 	Patterns = make_shared<BossPattern>(this); 
 		for (int i = 0; i < CHROMO_LENGTH; i++)

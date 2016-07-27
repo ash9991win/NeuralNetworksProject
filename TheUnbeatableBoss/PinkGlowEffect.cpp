@@ -5,6 +5,7 @@
 
 void PinkGlowEffect::Update(float deltaTime)
 {
+	SpriteEffects::Update(deltaTime);
 	mOwner->mSprite.setColor(sf::Color::Red);
 }
 

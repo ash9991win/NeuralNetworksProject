@@ -14,7 +14,8 @@ void SpriteEffects::Update(float deltaTime)
 void SpriteEffects::RestoreToOriginal()
 {
 	mOwner->mSprite = originalSprite;
-	mOwner->RemoveComponent(*this);
+	//mOwner->RemoveComponent(*this);
+	Enable = false;
 }
 
 void SpriteEffects::BeginPlay()
@@ -24,4 +25,13 @@ void SpriteEffects::BeginPlay()
 	effectTimer->UpdateDelegate.Bind(&SpriteEffects::Update, this);
 	effectTimer->FinishedDelegate.Bind(&SpriteEffects::RestoreToOriginal, this);
 	effectTimer->StartTimer();
+}
+
+void SpriteEffects::Activate()
+{
+	if (!Enable)
+	{
+		effectTimer->StartTimer();
+		Enable = true;
+	}
 }

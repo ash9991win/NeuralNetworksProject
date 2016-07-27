@@ -4,6 +4,7 @@
 #include"Component.h"
 #include"Timer.h"
 #include"ActionFactory.h"
+#include"CollisionComponent.h"
 std::vector<Actor*> World::mActorTable;
 World* World::mWorldInstance;
 sf::RenderWindow* World::mWindow;
@@ -42,10 +43,17 @@ void World::UpdateWorld(float deltaTime)
 			actor->Update(deltaTime);
 			for (auto component : actor->mComponents)
 			{
-				component->Update(deltaTime);
+				if (component->Enable)
+				{
+					component->Update(deltaTime);
+				}
 			}
 			actor->mSprite.setPosition(actor->mPosition);
-			mWindow->draw((actor->mSprite));
+			if (actor->mCollider)
+			{
+				actor->mCollider->mPosition = actor->mPosition;
+			}
+				mWindow->draw((actor->mSprite));
 		}
 	}
 	numberOfCycles++;
@@ -83,7 +91,7 @@ std::vector<Actor*> World::FindActorsOfType(std::uint64_t type)
 	return actorsOfThatType;
 }
 
-const std::vector<Actor*> World::GetAllActorsInTheWorld()
+const std::vector<Actor*>& World::GetAllActorsInTheWorld()
 {
 	return mActorTable;
 }

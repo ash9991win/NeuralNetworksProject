@@ -10,6 +10,7 @@ protected:
 	Component() = default;
 	virtual ~Component();
 public:
+	bool Enable;
 	virtual void Update(float deltaTime) = 0;
 	virtual void BeginPlay() = 0;
 	void SetOwner(Actor& owner);

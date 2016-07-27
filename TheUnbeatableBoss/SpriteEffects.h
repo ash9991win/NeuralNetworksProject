@@ -9,12 +9,15 @@ private:
 	Timer* effectTimer;
 	sf::Sprite originalSprite;
 public:
-	SpriteEffects(float maxtime) : maxDurationOfEffect(maxtime) {}
+	SpriteEffects(float maxtime) : maxDurationOfEffect(maxtime)
+	{
+		Enable = true;
+	}
 	~SpriteEffects();
-
 	// Inherited via Component
 	virtual void Update(float deltaTime) override;
 	void RestoreToOriginal();
 	virtual void BeginPlay() override;
+	virtual void Activate();
 };
 

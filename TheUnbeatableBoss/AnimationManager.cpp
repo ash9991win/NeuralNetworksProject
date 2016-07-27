@@ -75,4 +75,5 @@ void AnimationManager::Update(float deltaTime)
 
 void AnimationManager::BeginPlay()
 {
+	Enable = true;
 }

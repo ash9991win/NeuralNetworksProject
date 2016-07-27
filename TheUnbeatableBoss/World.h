@@ -77,7 +77,7 @@ public:
 	\brief Finds all actors in the world
 	\return A vector of all the actors 
 	*/
-	static const std::vector<Actor*> GetAllActorsInTheWorld();
+	static const std::vector<Actor*>& GetAllActorsInTheWorld();
 	static Timer* CreateTimer(float maxTime);
 	~World();
 };

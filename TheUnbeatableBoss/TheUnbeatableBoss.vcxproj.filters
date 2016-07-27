@@ -152,6 +152,7 @@
     <ClInclude Include="BossPattern.h" />
     <ClInclude Include="ActionFactory.h" />
     <ClInclude Include="PatternChooser.h" />
+    <ClInclude Include="TestVCXProj.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameLoop.cpp" />
@@ -262,6 +263,7 @@
     <ClCompile Include="BossPattern.cpp" />
     <ClCompile Include="ActionFactory.cpp" />
     <ClCompile Include="PatternChooser.cpp" />
+    <ClCompile Include="TestVCXProj.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

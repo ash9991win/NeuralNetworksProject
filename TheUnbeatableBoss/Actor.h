@@ -11,6 +11,7 @@ class Actor
 private:
 	//Make the World class a friend, in order to access the World's variables
 	friend class World;
+	friend class CollisionManager;
 	//The name of the actor
 	std::string mName;
 	//List of components for this actor
@@ -23,6 +24,8 @@ protected:
 	bool isActorAlive;
 	//The window that the actor renders to
 	sf::RenderWindow* mWindow;
+	class CollisionComponent* mCollider;
+	void CreateCollider();
 public:
 	//The position of the actor
 	sf::Vector2f mPosition;

@@ -5,6 +5,7 @@ RTTI_DEFINITION(CollisionComponent)
 CollisionComponent::CollisionComponent(float width, float height)
 	:mWidth(width),mHeight(height)
 {
+	Enable = true;
 }
 
 CollisionComponent::~CollisionComponent()
@@ -13,7 +14,7 @@ CollisionComponent::~CollisionComponent()
 
 void CollisionComponent::Update(float deltaTime)
 {
-	mPosition = mOwner->mPosition;
+//	mPosition = mOwner->mPosition;
 }
 
 void CollisionComponent::BeginPlay()

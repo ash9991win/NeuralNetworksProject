@@ -5,6 +5,7 @@
 
 RigidBody::RigidBody()
 {
+	Enable = true;
 }
 
 

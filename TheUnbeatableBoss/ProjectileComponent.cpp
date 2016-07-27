@@ -5,6 +5,7 @@
 
 ProjectileComponent::ProjectileComponent()
 {
+	Enable = true;
 }
 
 

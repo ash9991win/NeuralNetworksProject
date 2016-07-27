@@ -1,8 +1,15 @@
 #include"pch.h"
 #include "Actor.h"
+#include"CollisionComponent.h"
+void Actor::CreateCollider()
+{
+	mCollider =  new CollisionComponent(mSpriteWidth,mSpriteHeight);
+}
 Actor::~Actor()
 {
 	World::UnRegister(*this);
+	if (mCollider)
+		delete mCollider;
 }
 
 const World * Actor::GetWorld() const

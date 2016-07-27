@@ -73,10 +73,13 @@ void Player::Jump(float d)
 
 void Player::Shoot(float d)
 {
- 	auto bullet = World::SpawnActor<Bullet>("Bullet");
+ 	auto bullet = World::SpawnActor<Bullet>("Bullet",this,mBoss);
 	cout << "Added bullet" << endl;
-	bullet->mPosition = mPosition;
 	bullet->speed = 2000;
+
+	//auto bullet2 = World::SpawnActor<Bullet>("Bullet", mBoss, this);
+	//cout << "Added bullet" << endl;
+	//bullet2->speed = 2000;
 }
 
 void Player::Update(float dTime)
@@ -160,9 +163,6 @@ void Player::BeginPlay()
 	AnimManager->PlayAnimation(AnimationID::PlayerIdleAnimation);
 	mRigidBody = AddComponent<RigidBody>();
 	mRigidBody->SetMass(2.0f);
-	
-	auto collider = AddComponent<CollisionComponent>(mSpriteWidth, mSpriteHeight);
-	collider->OnCollision.Bind(&Player::OnCollision, this);
 }
 
 void Player::OnCollision(Actor * other)
