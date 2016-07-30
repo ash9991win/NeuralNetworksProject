@@ -16,16 +16,14 @@ void Bullet::Update(float deltaTime)
 
 void Bullet::BeginPlay()
 {
-	mSprite = *(ResourceManager::LoadSprite("PlayerIdle_1"));
-	SetSpriteDimensions(150, 150);
-	mSprite.setColor(sf::Color::Blue);
-
+	
 	CreateCollider();
+	mCollider->SetOwner(*this);
 	mCollider->OnCollision.Bind(&Bullet::OnCollision, this);
 	rigidBody = AddComponent<RigidBody>();
 	rigidBody->SetMass(2.0f);
-	speed = 1000;
 	mPosition = mOwner->mPosition;
+	mPosition.y += (mOwner->mSpriteHeight / 2);
 	sf::Vector2f directionVector = mTarget->mPosition - mOwner->mPosition;
 	VectorMath::Normalize(directionVector);
 	directionVector *= speed;
@@ -34,6 +32,10 @@ void Bullet::BeginPlay()
 
 void Bullet::OnCollision(Actor * actor)
 {
-	if(actor != this && (actor != mOwner) && (actor == mTarget))
-	Destroy();
+	if (actor != this && (actor != mOwner) && (actor == mTarget))
+	{
+		Destroy();
+		mTarget->Damage(mDamage);
+
+	}
 }

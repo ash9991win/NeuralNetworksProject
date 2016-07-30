@@ -1,9 +1,33 @@
 #include"pch.h"
 #include "Actor.h"
 #include"CollisionComponent.h"
+#include"GlowEffects.h"
 void Actor::CreateCollider()
 {
 	mCollider =  new CollisionComponent(mSpriteWidth,mSpriteHeight);
+}
+void Actor::Shield()
+{
+	GlowComponent->SetColor(sf::Color::Blue);
+	//Keep moving up
+     GlowComponent->Activate();
+	 IsShielded = true;
+}
+void Actor::UnShield()
+{
+	GlowComponent->Enable = false;
+	IsShielded = false;
+}
+void Actor::GameOver()
+{
+}
+void Actor::Damage(double value)
+{
+	mHealth -= value;
+	if (mHealth <= 0)
+	{
+		GameOver();
+	}
 }
 Actor::~Actor()
 {

@@ -124,9 +124,6 @@
     <ClInclude Include="ComboManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
-    <ClInclude Include="PinkGlowEffect.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Timer</Filter>
     </ClInclude>
@@ -153,6 +150,10 @@
     <ClInclude Include="ActionFactory.h" />
     <ClInclude Include="PatternChooser.h" />
     <ClInclude Include="TestVCXProj.h" />
+    <ClInclude Include="ShieldActor.h" />
+    <ClInclude Include="GlowEffects.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameLoop.cpp" />
@@ -235,9 +236,6 @@
     <ClCompile Include="ComboManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
-    <ClCompile Include="PinkGlowEffect.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>Timer</Filter>
     </ClCompile>
@@ -264,6 +262,10 @@
     <ClCompile Include="ActionFactory.cpp" />
     <ClCompile Include="PatternChooser.cpp" />
     <ClCompile Include="TestVCXProj.cpp" />
+    <ClCompile Include="ShieldActor.cpp" />
+    <ClCompile Include="GlowEffects.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

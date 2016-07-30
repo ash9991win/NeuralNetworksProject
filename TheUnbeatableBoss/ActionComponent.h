@@ -1,4 +1,5 @@
 #pragma once
+#include<algorithm>
 #include"Actor.h"
 //The action class ( a player or a boss can perform a certain action)
 // Typically, the boss will perform an action from it's list of actions
@@ -18,7 +19,9 @@ private:
 	double mEffectiveness;
 protected:
 	Actor* mOwner;
+	Actor* mTarget;
 	string mName;
+	float mDuration;
 public:
 	inline float Effectiveness() const { return mEffectiveness; }
 	inline void IncreaseEffectiveness(float effFactor = 0.25) { mEffectiveness += effFactor; }
@@ -26,6 +29,7 @@ public:
 	inline ActionState GetState() const { return mCurrentState; }
 	inline void ChangeState(ActionState state) { mCurrentState = state; }
 	inline void SetOwner(Actor* owner) { mOwner = owner; }
+	inline void SetTarget(Actor* target) { mTarget = target; }
 	Action(string name);
 	const string& Name() const { return mName; }
 	~Action();

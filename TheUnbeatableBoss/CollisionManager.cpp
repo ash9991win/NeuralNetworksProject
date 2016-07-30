@@ -11,11 +11,15 @@ void CollisionManager::Update(float deltaTime)
 	//For each actor, check with all the other actors for a collision
 	for (auto actor1 : mActorsWithColliders)
 	{
+		if (!actor1->shouldUpdate)
+			continue;
 		auto Collider1 = actor1->mCollider;
 		if (Collider1)
 		{
 			for (auto actor2 : mActorsWithColliders)
 			{
+				if (!actor2->shouldUpdate)
+					continue;
 				auto Collider2 = actor2->mCollider;
 				if (actor1 != actor2 && Collider2)
 				{

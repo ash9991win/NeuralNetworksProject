@@ -6,6 +6,8 @@ RTTI_DEFINITION(Action)
 Action::Action(string name)
 	:mName(name)
 {
+	mEffectiveness = 0.0;
+
 }
 
 

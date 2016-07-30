@@ -9,7 +9,7 @@
 #include"AnimationComponent.h"
 #include"CollisionComponent.h"
 #include"Bullet.h"
-#include"PinkGlowEffect.h"
+#include"GlowEffects.h"
 #include"NeuralTrainer.h"
 #include"Movement.h"
 #include"ActionFactory.h"
@@ -62,8 +62,7 @@ void Boss::CollidedWithActor(Actor * actor)
 {
 	if (actor->Is(Bullet::TypeIdClass()) && actor->IsActorAlive())
 	{
-		static auto pinkeffect = AddComponent<PinkGlowEffect>(0.4);
-		pinkeffect->Activate();
+		GlowComponent->SetColor(sf::Color::Red);
 	}
 	//mSprite.setColor(sf::Color::Red);
 
@@ -92,7 +91,7 @@ void Boss::Update(float deltaTime)
 		TrainBossWithSequence();
 	}
 #endif
-	
+	Patterns->Update(deltaTime);
 }
 
 sf::Keyboard::Key Boss::PredictNextKey(vector<double> inputsToNetwork)
@@ -150,7 +149,8 @@ void Boss::CorrectPrediction(sf::Keyboard::Key keyToCorrectTo)
 
 void Boss::BeginPlay()
 {
-	mPosition = sf::Vector2f(WINDOW_WIDTH - 200, WINDOW_HEIGHT - 200);
+	mHealth = 100;
+	mPosition = sf::Vector2f(WINDOW_WIDTH /2, WINDOW_HEIGHT /2);
 	SetSpriteDimensions(200, 200);
 	speed = 2000;
 	mPlayer = World::FindActorsOfType<Player>()[0];
@@ -161,7 +161,7 @@ void Boss::BeginPlay()
 	mCollider = new CollisionComponent(100,100);
 	mCollider->OnCollision.Bind(&Boss::CollidedWithActor, this);
 	InputManager::KeyReleasedTable[sf::Keyboard::A].Bind(&Boss::MoveLeft, this);
-	Patterns = make_shared<BossPattern>(this); 
+	Patterns = make_shared<PatternFollower>(this,mPlayer); 
 		for (int i = 0; i < CHROMO_LENGTH; i++)
 		{
 			Patterns->EnequeAction(ActionFactory::GetARandomAction());
@@ -169,11 +169,20 @@ void Boss::BeginPlay()
 	Patterns->BeginPlay(); 
 	mPatternChooser = make_shared<PatternChooser>();
 	mPatternChooser->Initialize();
+	GlowComponent = AddComponent<GlowEffects>(0.4, sf::Color::Red);
+	GlowComponent->Enable = false;
+	Patterns->OnPatternCompletion.Bind([this]() {
+		mPatternChooser->FindNextBestPattern(Patterns);
+	});
 }
 
 bool Boss::IsBossThinking() const
 {
 	return mComboTrainer->IsTrainerCalculating();
+}
+shared_ptr<Action> Boss::GetCurrentAction()
+{
+	return Patterns->GetCurrentAction();
 }
 #if TRAIN_WITH_DATA
 void Boss::TrainBossWithSequence()

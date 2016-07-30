@@ -2,7 +2,7 @@
 #include "BossPattern.h"
 
 
-void BossPattern::Update(float deltaTime)
+void PatternFollower::Update(float deltaTime)
 {
 	if (mCurrentAction->GetState() == ActionState::STARTED)
 	{
@@ -16,29 +16,31 @@ void BossPattern::Update(float deltaTime)
 	{
 		mCurrentActionIndex++;
 		if (mCurrentActionIndex >= mListOfActions.size())
-			ResetCurrentAction();
+			OnPatternCompletion.Invoke();
 		else
 			mCurrentAction = mListOfActions[mCurrentActionIndex];
 	}
 }
 
-void BossPattern::BeginPlay()
+void PatternFollower::BeginPlay()
 {
 	for (auto action : mListOfActions)
 	{
 		action->SetOwner(Owner);
+		action->SetTarget(Target);
+		action->ChangeState(ActionState::STARTED);
 	}
 	mCurrentActionIndex = 0;
 	mCurrentAction = mListOfActions[0];
 	mCurrentAction->ChangeState(ActionState::STARTED);
 }
 
-BossPattern::BossPattern(Actor* owner)
-	:Owner(owner)
+PatternFollower::PatternFollower(Actor* owner,Actor* target)
+	:Owner(owner),Target(target)
 {
 }
 
 
-BossPattern::~BossPattern()
+PatternFollower::~PatternFollower()
 {
 }

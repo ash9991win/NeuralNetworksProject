@@ -8,6 +8,7 @@ class ActionFactory
 public:
 	static shared_ptr<Action> GetARandomAction();
 	static shared_ptr<Action> GetActionOfType(std::uint64_t id);
+	static shared_ptr<Action> GetActionOfType(string name);
 	static void InitializeFactory();
 	ActionFactory() = default;
 	~ActionFactory() = default;

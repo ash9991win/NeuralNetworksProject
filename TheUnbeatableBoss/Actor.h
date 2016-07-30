@@ -26,9 +26,17 @@ protected:
 	sf::RenderWindow* mWindow;
 	class CollisionComponent* mCollider;
 	void CreateCollider();
+	bool IsShielded;
 public:
+	void Shield();
+	void UnShield();
+	inline bool CheckIfShielded() const { return IsShielded; }
 	//The position of the actor
 	sf::Vector2f mPosition;
+	double mHealth;
+	virtual void GameOver();
+	delegate<void> GameOverEvent();
+	virtual void Damage(double value);
 	//The dimensions of the sprite that the actor has and the sprite of the actor
 	sf::Sprite mSprite;
 	float mSpriteWidth;
@@ -57,6 +65,7 @@ public:
 	//RTTI functions 
 	virtual bool Is(std::uint64_t) const { return false; }
 	virtual bool Is(std::string) const { return false; }
+	class GlowEffects *GlowComponent;
 	template <typename T>
 	T* As() const
 	{

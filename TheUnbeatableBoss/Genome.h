@@ -17,9 +17,9 @@ public:
 		{
 			StringDecoder[MAXNUMBEROFVALUES] = text;
 		}
-		MAXNUMBEROFVALUES++;
 		DecodingTable[MAXNUMBEROFVALUES] = value;
-		
+		MAXNUMBEROFVALUES++;
+
 	}
 	const vector<int>& GetBits() const
 	{

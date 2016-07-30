@@ -8,10 +8,13 @@ class Bullet :
 private:
 	Actor* mOwner;
 	Actor* mTarget;
-public:
-	Bullet(Actor* owner, Actor* target)
-	:mOwner(owner),mTarget(target){
-
+	double mDamage;
+public: 
+	Bullet(Actor* owner, Actor* target,sf::Sprite& sprite, float width, float height,float sp,double damage = 10)
+	:mOwner(owner),mTarget(target),mDamage(damage){
+		speed = sp;
+		mSprite = sprite;
+		SetSpriteDimensions(width, height);
 	}
 	RigidBody* rigidBody;
 	// Inherited via Actor

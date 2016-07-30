@@ -5,6 +5,7 @@
 #include"Timer.h"
 #include"ActionFactory.h"
 #include"CollisionComponent.h"
+#include"ResourceManager.h"
 std::vector<Actor*> World::mActorTable;
 World* World::mWorldInstance;
 sf::RenderWindow* World::mWindow;
@@ -14,6 +15,7 @@ void World::CreateWorld(sf::RenderWindow* window)
 {
 	mWorldInstance = new World();
 	mWindow = window;
+	ResourceManager::InitializeResources();
 	ActionFactory::InitializeFactory();
 }
 
@@ -36,11 +38,13 @@ void World::UnRegister(Actor & actor)
 
 void World::UpdateWorld(float deltaTime)
 {
-	for (auto actor :mActorTable)
+	for (int i = 0; i < mActorTable.size();++i)
 	{
+		auto actor = mActorTable[i];
 		if (actor->shouldUpdate)
 		{
 			actor->Update(deltaTime);
+			WrapActorAroundLevel(*actor);
 			for (auto component : actor->mComponents)
 			{
 				if (component->Enable)
@@ -94,6 +98,14 @@ std::vector<Actor*> World::FindActorsOfType(std::uint64_t type)
 const std::vector<Actor*>& World::GetAllActorsInTheWorld()
 {
 	return mActorTable;
+}
+
+void World::WrapActorAroundLevel(Actor & actor)
+{
+	if (actor.mPosition.x <= 0 || (actor.mPosition.x + actor.mSpriteWidth) >= WINDOW_WIDTH)
+	{
+		actor.mPosition.x = actor.mPosition.x;
+	}
 }
 
 World::World()

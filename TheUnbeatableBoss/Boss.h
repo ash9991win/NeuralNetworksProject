@@ -17,7 +17,7 @@ private:
 	class AnimationComponent* IdleAnimation;
 public:
 	shared_ptr<PatternChooser> mPatternChooser;
-	shared_ptr<BossPattern> Patterns;
+	shared_ptr<PatternFollower> Patterns;
 	Boss();
 	~Boss();
 	void CollidedWithActor(Actor* actor);
@@ -31,6 +31,15 @@ public:
 	virtual void BeginPlay() override;
 	bool IsBossThinking() const;
 	inline NeuralNet* GetBrain() { return mComboPredictor; }
+	shared_ptr<Action> GetCurrentAction();
+	virtual void Damage(double val) override
+	{
+		if (!IsShielded)
+		{
+			Actor::Damage(val);
+			GetCurrentAction()->DecreaseEffectiveness();
+		}
+	}
 #if TRAIN_WITH_DATA
 	void TrainBossWithSequence();
 #endif

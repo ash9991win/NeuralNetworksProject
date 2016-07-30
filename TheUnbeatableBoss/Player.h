@@ -6,6 +6,7 @@ class RigidBody;
 \class Player
 \brief The Player class
 */
+class Action;
 class Player :
 	public Actor
 {
@@ -19,7 +20,9 @@ private:
 	sf::Keyboard::Key mBossPrediction;
 	bool mBossPredictedAValue;
 	int mNumberOfKeyPresses;
-	void UpdateInputPresses(sf::Keyboard::Key key,string name);
+	void UpdateInputPresses(sf::Keyboard::Key key, string name); \
+	shared_ptr<Action> mCurrentAction;
+	void InitializeAction();
 public:
 	map<sf::Keyboard::Key,double> mInputWeights;
 	vector<double> mInputCombos;
@@ -53,6 +56,7 @@ public:
 	void Shoot(float d);
 	virtual void Update(float deltaTime) override;
 	virtual void BeginPlay() override;
+	virtual void Damage(double value) override;
 	class AnimationManager* AnimManager;
 	void OnCollision(Actor* other);
 	RigidBody* mRigidBody;

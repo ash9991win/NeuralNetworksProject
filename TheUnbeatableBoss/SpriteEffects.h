@@ -19,5 +19,6 @@ public:
 	void RestoreToOriginal();
 	virtual void BeginPlay() override;
 	virtual void Activate();
+	void ChangeDuration(float newDur) { maxDurationOfEffect = newDur; }
 };
 

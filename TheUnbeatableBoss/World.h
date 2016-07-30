@@ -78,6 +78,7 @@ public:
 	\return A vector of all the actors 
 	*/
 	static const std::vector<Actor*>& GetAllActorsInTheWorld();
+	static void WrapActorAroundLevel(Actor& actor);
 	static Timer* CreateTimer(float maxTime);
 	~World();
 };

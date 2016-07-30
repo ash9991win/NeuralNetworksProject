@@ -32,7 +32,6 @@ int main()
 	//ThreadManager::FinishThreads();
 	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Test Input");
 	World::CreateWorld(&window);
-	ResourceManager::InitializeResources();
 	sf::Clock GameClock;
 	auto BgActor = World::SpawnActor<BackgroundActor>("Background");
 	auto animC = BgActor->AddComponent<AnimationComponent>();
@@ -68,9 +67,6 @@ int main()
 		sf::Vector2f pos;
 		pos.x = position.x;
 		pos.y = position.y;
-		auto index = TileMap::GetIndexForPosition(pos);
-		cout << "Pressed position" << index.first << " " << index.second << endl;
-		cout << "Tile is  " << TileMap::IsTileFree(pos) << endl;
 		BossActor->mPatternChooser->FindNextBestPattern(BossActor->Patterns);
 	});
 	GAVisual.AssignWindow(GAWindow);

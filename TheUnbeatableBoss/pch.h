@@ -1,6 +1,7 @@
 #pragma once
 #include"delegate.h"
 #include<memory>
+#include<algorithm>
 #include<SFML/Window.hpp>
 #include<SFML/Graphics.hpp>
 #define TRAIN_WITH_DATA 1

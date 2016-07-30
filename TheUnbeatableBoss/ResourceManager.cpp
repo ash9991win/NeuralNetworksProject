@@ -25,6 +25,12 @@ void ResourceManager::InitializeResources()
 	mTextureTable["background7"].loadFromFile("Resources/Background-07.png");
 	mTextureTable["background8"].loadFromFile("Resources/Background-08.png");
 
+	mTextureTable["Shield"].loadFromFile("Resources/rancho-spritesheet.png");
+	mTextureTable["Bullet1"].loadFromFile("Resources/rancho-spritesheet.png");
+	mTextureTable["Bullet2"].loadFromFile("Resources/bullets/Bullet2.png");
+	mTextureTable["Bullet3"].loadFromFile("Resources/bullets/Bullet3.png");
+
+
 
 	mSpriteTable["background0"] = sf::Sprite(mTextureTable["background0"]);
 	mSpriteTable["background1"] = sf::Sprite(mTextureTable["background1"]);
@@ -38,6 +44,11 @@ void ResourceManager::InitializeResources()
 
 	mSpriteTable["boss"] = sf::Sprite(mTextureTable["boss"]);
 	mSpriteTable["player"] = sf::Sprite(mTextureTable["player"]);
+	mSpriteTable["Shield"] = sf::Sprite(mTextureTable["Shield"]);
+	mSpriteTable["Bullet1"] = sf::Sprite(mTextureTable["Bullet1"]);
+	mSpriteTable["Bullet2"] = sf::Sprite(mTextureTable["Bullet2"]);
+	mSpriteTable["Bullet3"] = sf::Sprite(mTextureTable["Bullet3"]);
+
 
 	mSpriteTable["PlayerIdle_1"] = sf::Sprite(mTextureTable["player"], sf::IntRect(9,162,24,30));
 	mSpriteTable["PlayerIdle_2"] = sf::Sprite(mTextureTable["player"], sf::IntRect(46, 162, 24, 30));

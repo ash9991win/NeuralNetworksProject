@@ -10,7 +10,7 @@ private:
 	friend int main();
 public:
 	void Initialize();
-	void FindNextBestPattern(shared_ptr<BossPattern>& pattern);
+	void FindNextBestPattern(shared_ptr<PatternFollower>& pattern);
 	PatternChooser();
 	~PatternChooser();
 };

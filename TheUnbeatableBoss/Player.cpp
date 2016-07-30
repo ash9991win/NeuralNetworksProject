@@ -13,8 +13,12 @@
 #include"StaticActor.h"
 #include"CollisionComponent.h"
 #include"NeuralTrainer.h"
+#include"PatternChooser.h"
 #include<iostream>
 #include<list>
+#include"ActionFactory.h"
+#include"ActionComponent.h"
+#include"GlowEffects.h"
 RTTI_DEFINITION(Player)
 
 
@@ -40,6 +44,13 @@ void Player::UpdateInputPresses(sf::Keyboard::Key key,string name)
 	{
 		mInputCombos.push_back(mInputWeights[key]);
 	}
+}
+
+void Player::InitializeAction()
+{
+	mCurrentAction->SetOwner(this);
+	mCurrentAction->SetTarget(mBoss);
+	mCurrentAction->ChangeState(ActionState::STARTED);
 }
 
 void Player::MoveLeft(float d)
@@ -73,9 +84,7 @@ void Player::Jump(float d)
 
 void Player::Shoot(float d)
 {
- 	auto bullet = World::SpawnActor<Bullet>("Bullet",this,mBoss);
-	cout << "Added bullet" << endl;
-	bullet->speed = 2000;
+
 
 	//auto bullet2 = World::SpawnActor<Bullet>("Bullet", mBoss, this);
 	//cout << "Added bullet" << endl;
@@ -84,48 +93,47 @@ void Player::Shoot(float d)
 
 void Player::Update(float dTime)
 {
-	if (mIsJumpingUp)
+	
+	//if (mNumberOfKeyPresses == COMBO_LENGTH)
+	//{
+	////	mNumberOfKeyPresses = 0;
+	//	auto result = mBoss->PredictNextKey(mInputCombos);
+	//	mBossPredictedAValue = true;
+	//	if (result != sf::Keyboard::Key::BackSpace)
+	//	{
+	//		cout << "Predicted "<<result << endl;
+	//		mBossPrediction = result;
+	//		//mInputCombos.clear();
+	//		mInputCombos.clear();
+	//	}
+	//}
+	//if (mInputCombos.size() > COMBO_LENGTH)
+	//	mInputCombos.clear();
+	if (mCurrentAction->GetState() == ActionState::STARTED)
 	{
-		distanceTravelled = abs(mOldPosition.y - mPosition.y);
-		//If the player is jumping, then once the distance has been travelled, set the force to positive speed
-		if (distanceTravelled >= MAX_JUMP_DISTANCE)
-		{
-			mIsJumpingUp = false;
-			mIsJumpingDown = true;
-			mRigidBody->SetForce(sf::Vector2f(0, speed));
-			mOldPosition = mPosition;
-			distanceTravelled = 0;
-		}
+		mCurrentAction->ChangeState(ActionState::RUNNING);
 	}
-	if (mPosition.y + mSpriteHeight >= FLOOR_Y && !mIsJumpingUp)
+	else if (mCurrentAction->GetState() == ActionState::RUNNING)
 	{
-		mRigidBody->SetForce(mRigidBody->GetForce().x, 0);
+		mCurrentAction->Update(dTime);
 	}
-	if (mNumberOfKeyPresses == COMBO_LENGTH)
+	else if (mCurrentAction->GetState() == ActionState::EXITING)
 	{
-	//	mNumberOfKeyPresses = 0;
-		auto result = mBoss->PredictNextKey(mInputCombos);
-		mBossPredictedAValue = true;
-		if (result != sf::Keyboard::Key::BackSpace)
-		{
-			cout << "Predicted "<<result << endl;
-			mBossPrediction = result;
-			//mInputCombos.clear();
-			mInputCombos.clear();
-		}
+		mCurrentAction = ActionFactory::GetARandomAction();
+		InitializeAction();
 	}
-	if (mInputCombos.size() > COMBO_LENGTH)
-		mInputCombos.clear();
 }
 
 void Player::BeginPlay()
 {
+	mHealth = 100;
 	mShouldBossCorrectPrediction = false;
 	mPosition = sf::Vector2f(10, WINDOW_HEIGHT - 200);
 	mOldPosition = mPosition;
 	mIsJumpingUp = false;
 	mIsJumpingDown = false;
 	SetSpriteDimensions(150,150);
+	CreateCollider();
 	speed = 1000;
 	InputManager::KeyPressedTable[sf::Keyboard::A].Bind(&Player::MoveLeft, this);
 	InputManager::KeyReleasedTable[sf::Keyboard::D].Bind([this](float d) {AnimManager->PlayAnimation(AnimationID::PlayerIdleAnimation); mRigidBody->ResetForce();
@@ -163,6 +171,16 @@ void Player::BeginPlay()
 	AnimManager->PlayAnimation(AnimationID::PlayerIdleAnimation);
 	mRigidBody = AddComponent<RigidBody>();
 	mRigidBody->SetMass(2.0f);
+	GlowComponent = AddComponent<GlowEffects>(0.4, sf::Color::Red);
+	GlowComponent->Enable = false;
+	mCurrentAction = ActionFactory::GetARandomAction();
+	InitializeAction();
+}
+
+void Player::Damage(double value)
+{
+	Actor::Damage(value);
+	mBoss->GetCurrentAction()->IncreaseEffectiveness();
 }
 
 void Player::OnCollision(Actor * other)
